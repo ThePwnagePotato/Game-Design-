@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{2DEB6769-71FF-74E4-9805-E7DF6223CFB8}") = "CarSimulator-master", "Assembly-CSharp.csproj", "{0BDE8346-B85F-F5B7-5EF8-4D693F9B7D77}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0BDE8346-B85F-F5B7-5EF8-4D693F9B7D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BDE8346-B85F-F5B7-5EF8-4D693F9B7D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BDE8346-B85F-F5B7-5EF8-4D693F9B7D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BDE8346-B85F-F5B7-5EF8-4D693F9B7D77}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
