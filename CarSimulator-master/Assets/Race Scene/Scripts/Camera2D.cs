@@ -17,7 +17,7 @@ public class Camera2D: MonoBehaviour
 		float h = Screen.height / height;
 
 		float ratio = w / h;
-		float size = (height / 2) / 100f;
+		float size = (height / 2) / 50f;
 
 		if (w < h)
 			size /= ratio;
