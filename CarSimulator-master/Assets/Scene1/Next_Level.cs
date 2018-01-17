@@ -11,7 +11,7 @@ public class Next_Level : MonoBehaviour {
 		RaycastHit hit;
 		if (Physics.Raycast (ray, out hit, 100)) {
 			if (string.Compare (hit.collider.name, "name") == 0) {
-				SceneManager.LoadScene ("map1");
+				SceneManager.LoadScene ("race");
 			}
 		}
 	}

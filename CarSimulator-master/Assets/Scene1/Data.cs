@@ -19,21 +19,42 @@ public class Data : MonoBehaviour {
 	public int Grip;
 
 	public int Drag;
-	public int Mass;
+	public int MassOld;
 	public int Durability;
 
 	public int Acceleration;
 	public int Top_Speed;
 
-	//Parameters to pass on
-	public float MaxSteerAngle = 0.75f;
-	public float AirResistance = 2.5f;
-	public float RollingResistance = 8f;
-	public float TotalTireGripFront = 2.5f;
-	public float TotalTireGripRear = 2.5f;
-	public float SteerSpeed = 2.5f;
-	public float SpeedTurningStability = 10f;
-	public float DurabilityMax = 2000f;
-	public float accelMultiplier = 1.4f;
-	public float speedLimit = 16f;
+	//------------------------------------------------------------------------------------------------------//
+	//Tires
+	public float MaxSteerAngle; //0.3-1
+	public float SpeedTurningStability;//5-15
+	public float SteerSpeed;//1-4
+	public float TotalTireGrip;//1-4
+	public float RollingResistance;//5-25
+
+	//Chassis
+	public float DurabilityMax;//100-1000
+	public float AirResistance;//0-15
+	public float Mass;//800-4500
+
+	//Engine
+	public float accelMultiplier;//0.5-1.6
+	public float speedLimit;//5-30
+	//------------------------------------------------------------------------------------------------------//
+
+	void Update (){
+		MaxSteerAngle = 0.3f + 0.07f * Steering;
+		SpeedTurningStability = 5 + 1f * Steering;
+		SteerSpeed = 1 + 0.3f * Steering;
+		TotalTireGrip = 1 + 0.3f * Grip;
+		RollingResistance = 5f + 2f * Inertia;
+
+		DurabilityMax = 100f + 90f * Durability;
+		AirResistance = 1.5f * Drag;
+		Mass = 800f + 370f * MassOld;
+
+		accelMultiplier = 0.5f + 0.11f * Acceleration;
+		speedLimit = 5 + 2.5f * Top_Speed;
+		}
 }

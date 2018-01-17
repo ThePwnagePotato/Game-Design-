@@ -181,13 +181,14 @@ public class Car : MonoBehaviour {
 				this.MaxSteerAngle = Data.MaxSteerAngle;
 				this.AirResistance = Data.AirResistance;
 				this.RollingResistance = Data.RollingResistance;
-				this.TotalTireGripFront = Data.TotalTireGripFront;
-				this.TotalTireGripRear = Data.TotalTireGripRear;
+				this.TotalTireGripFront = Data.TotalTireGrip;
+				this.TotalTireGripRear = Data.TotalTireGrip;
 				this.SteerSpeed = Data.SteerSpeed;
 				this.SpeedTurningStability = Data.SpeedTurningStability;
 				this.Durability = Data.DurabilityMax;
 				this.accelMultiplier = Data.accelMultiplier;
 				this.speedLimit = Data.speedLimit;
+				Rigidbody2D.mass = Data.Mass;
 				Debug.Log ("Car loaded from persistant_object");
 			}
 		}

@@ -45,7 +45,7 @@ public class Car_Data : MonoBehaviour {
 		Data.Grip = Grip;
 
 		Data.Drag = Drag;
-		Data.Mass = Mass;
+		Data.MassOld = Mass;
 		Data.Durability = Durability;
 
 		Data.Acceleration = Acceleration;
