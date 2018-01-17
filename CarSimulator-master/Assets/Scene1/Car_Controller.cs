@@ -18,6 +18,10 @@ public class Car_Controller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update() {
+		if (Input.GetKey("escape")) {
+			Application.Quit();
+		}
+
 		if (Input.GetMouseButtonDown(0)) {
 			//Debug.Log("Pressed left click, casting ray.");
 			CastRay();

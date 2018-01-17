@@ -215,9 +215,17 @@ public class Car : MonoBehaviour {
 
 	void Update() {
 
+		if (Input.GetKey("escape")) {
+			Application.Quit();
+		}
+
 		if (waitForResponse) {
 			if(Input.GetKey(KeyCode.Space))	{
-				SceneManager.LoadScene ("Scene1");
+				if (finished) {
+					SceneManager.LoadScene ("LevelSelect");
+				} else {
+					SceneManager.LoadScene ("Scene1");
+				}
 			}
 			return;
 		}
