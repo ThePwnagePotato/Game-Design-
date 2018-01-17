@@ -140,6 +140,9 @@ public class Car : MonoBehaviour {
 	GameObject Persistant_Object;
 	Data Data;
 
+	bool finished;
+	bool waitForResponse;
+
 	void Awake() {
 
 		CameraView = GameObject.Find ("CameraView").gameObject;
@@ -197,6 +200,9 @@ public class Car : MonoBehaviour {
 		timeMSec = 0;
 		timeSec = 0;
 		timeMin = 0;
+
+		finished = false;
+		waitForResponse = false;
 	}
 
 	void Start() {
@@ -208,6 +214,13 @@ public class Car : MonoBehaviour {
 	}
 
 	void Update() {
+
+		if (waitForResponse) {
+			if(Input.GetKey(KeyCode.Space))	{
+				SceneManager.LoadScene ("Scene1");
+			}
+			return;
+		}
 
 		if (IsPlayerControlled) {
 
@@ -297,35 +310,47 @@ public class Car : MonoBehaviour {
 		if (IsPlayerControlled)
 		{
 			CameraView.transform.position = this.transform.position;
-		}
 
-		timeMSec += (int) (Time.deltaTime * 1000);
-		if (timeMSec >= 1000) {
-			timeMSec -= 1000;
-			timeSec++;
+			timeMSec += (int) (Time.deltaTime * 1000);
+			if (timeMSec >= 1000) {
+				timeMSec -= 1000;
+				timeSec++;
+			}
+			if (timeSec >= 60) {
+				timeSec -= 60;
+				timeMin++;
+			}
 		}
-		if (timeSec >= 60) {
-			timeSec -= 60;
-			timeMin++;
-		}
-
 
 		if (IsPlayerControlled && Durability <= 0) {
 			Explode ();
 		}
 	}
 
-	void Explode() {
+	void loseCarControl() {
 		IsPlayerControlled = false;
+		Rigidbody2D.velocity *= 0;
+		transform.Translate (Vector3.right * 2000, transform);
+		waitForResponse = true;
+	}
 
+	void Explode() {
 		GameObject explosion = Instantiate(Resources.Load("Explosion", typeof(GameObject)), new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
 		explosion.transform.Translate (Vector3.back * 2, explosion.transform.parent);
 
-		Rigidbody2D.velocity *= 0;
-		transform.Translate (Vector3.right * 2000, transform);
+		loseCarControl();
+	}
+
+	void finishRace() {
+		finished = true;
+		loseCarControl();
 	}
 
 	void FixedUpdate() {
+
+		if (waitForResponse) {
+			return;
+		}
 
 		// Update from rigidbody to retain collision responses
 		Velocity = Rigidbody2D.velocity;
@@ -467,7 +492,7 @@ public class Car : MonoBehaviour {
 			if (layer.Equals ("Ground")) {
 				string tag = hit.transform.gameObject.tag;
 				if (tag.Equals ("Finish")) {
-					SceneManager.LoadScene ("race");
+					finishRace ();
 				} else if (tag.Equals ("Road")) {
 					offRoad = false;
 				} else if (tag.Equals ("Offroad")) {
@@ -475,7 +500,7 @@ public class Car : MonoBehaviour {
 				} else {
 					offRoad = true;
 				}
-			}
+			} 
 		} else {
 			offRoad = true;
 		}
@@ -569,6 +594,19 @@ public class Car : MonoBehaviour {
 		// Time
 		GUI.contentColor = new Color (0f, 0f, 0f, 0.9f);
 		GUI.Label (new Rect(Screen.width * 0.94f, 3f, Screen.width * 0.1f, 27f), timeMin + "m" + timeSec + "s" + timeMSec);
+
+		if (!IsPlayerControlled) {
+			GUI.contentColor = new Color (0f, 0f, 0f, 0.9f);
+			GUI.Label (new Rect(Screen.width * 0.44f, Screen.height * 0.6f, Screen.width * 0.3f, 30f), "Press space to continue...");
+
+			if (finished) {
+				GUI.contentColor = new Color (0f, 0f, 0f, 0.9f);
+				GUI.Label (new Rect(Screen.width * 0.44f, Screen.height * 0.53f, Screen.width * 0.3f, 30f), "You finised in " + timeMin + "m" + timeSec + "s" + timeMSec);
+			} else if (Durability <= 0) {
+				GUI.contentColor = new Color (0f, 0f, 0f, 0.9f);
+				GUI.Label (new Rect(Screen.width * 0.44f, Screen.height * 0.53f, Screen.width * 0.3f, 30f), "You died!!!");
+			}
+		}
 	}
 
 }
