@@ -11,4 +11,6 @@ public class Item : MonoBehaviour {
 	public int data1;
 	public int data2;
 	public int data3;
+
+
 }

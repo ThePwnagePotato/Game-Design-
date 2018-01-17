@@ -37,7 +37,7 @@ public class Car_Controller : MonoBehaviour {
 				newName = Item.name;
 
 				if (Item.NextLevel == true) {
-					SceneManager.LoadScene ("race");
+					SceneManager.LoadScene ("map1");
 				}
 				else if (Item.menu == false) {
 					switch (Item.type) {
@@ -45,10 +45,20 @@ public class Car_Controller : MonoBehaviour {
 						Car_Data.Tire_Left = newSprite;
 						Car_Data.Tire_Right = newSprite;
 						Car_Data.TireName = newName;
+						Car_Data.Inertia = Car_Data.TempData1;
+						Car_Data.Steering = Car_Data.TempData2;
+						Car_Data.Grip = Car_Data.TempData3;
 						break;
 					case 1:
 						Car_Data.Chassis = newSprite;
 						Car_Data.ChassisName = newName;
+						Car_Data.Drag = Car_Data.TempData1;
+						Car_Data.Mass = Car_Data.TempData2;
+						Car_Data.Durability = Car_Data.TempData3;
+						break;
+					case 2:
+						Car_Data.Acceleration = Car_Data.TempData1;
+						Car_Data.Top_Speed = Car_Data.TempData2;
 						break;
 					}
 				}else {
@@ -90,16 +100,10 @@ public class Car_Controller : MonoBehaviour {
 			if (Item != null) {
 				if (Item.menu == false) {
 					Car_Data.Looking = true;
-					switch (Item.type) {
-					case 0: //tire
-						Car_Data.TempData1 = Item.data1;
-						Car_Data.TempData2 = Item.data2;
-						Car_Data.TempData3 = Item.data3;
-						break;
-					case 1: //chassis
+					Car_Data.TempData1 = Item.data1;
+					Car_Data.TempData2 = Item.data2;
+					Car_Data.TempData3 = Item.data3;
 						
-						break;
-					}
 				}
 			}
 		}

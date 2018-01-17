@@ -185,7 +185,7 @@ public class Car : MonoBehaviour {
 				this.TotalTireGripRear = Data.TotalTireGripRear;
 				this.SteerSpeed = Data.SteerSpeed;
 				this.SpeedTurningStability = Data.SpeedTurningStability;
-				this.Durability = Data.Durability;
+				this.Durability = Data.DurabilityMax;
 				this.accelMultiplier = Data.accelMultiplier;
 				this.speedLimit = Data.speedLimit;
 				Debug.Log ("Car loaded from persistant_object");
@@ -281,13 +281,13 @@ public class Car : MonoBehaviour {
 		CenterOfGravity.transform.localPosition = Vector2.Lerp (CenterOfGravity.transform.localPosition, pos, 0.1f);
 
 		// Skidmarks
-		if (Mathf.Abs (LocalAcceleration.y) > 18 || EBrake == 1) {
-			AxleRear.TireRight.SetTrailActive (true);
-			AxleRear.TireLeft.SetTrailActive (true);
-		} else {
-			AxleRear.TireRight.SetTrailActive (false);
-			AxleRear.TireLeft.SetTrailActive (false);
-		}
+//		if (Mathf.Abs (LocalAcceleration.y) > 18 || EBrake == 1) {
+//			AxleRear.TireRight.SetTrailActive (true);
+//			AxleRear.TireLeft.SetTrailActive (true);
+//		} else {
+//			AxleRear.TireRight.SetTrailActive (false);
+//			AxleRear.TireLeft.SetTrailActive (false);
+//		}
 
 		// Automatic transmission
 		Engine.UpdateAutomaticTransmission (Rigidbody2D);
@@ -465,12 +465,12 @@ public class Car : MonoBehaviour {
 			//Debug.Log ("layer: " + layer);
 			if (layer.Equals ("Ground")) {
 				string tag = hit.transform.gameObject.tag;
-				if (tag.Equals ("Road")) {
+				if (tag.Equals ("Finish")) {
+					SceneManager.LoadScene ("race");
+				} else if (tag.Equals ("Road")) {
 					offRoad = false;
 				} else if (tag.Equals ("Offroad")) {
 					offRoad = true;
-				} else if (tag.Equals ("Finish")) {
-					SceneManager.LoadScene ("race");
 				} else {
 					offRoad = true;
 				}

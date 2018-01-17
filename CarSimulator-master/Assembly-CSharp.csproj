@@ -56,6 +56,7 @@
      <Compile Include="Assets\Race Scene\Scripts\Car.cs" />
      <Compile Include="Assets\Race Scene\Scripts\Engine.cs" />
      <Compile Include="Assets\Race Scene\Scripts\Tire.cs" />
+     <Compile Include="Assets\Scene1\Bar_Renderer.cs" />
      <Compile Include="Assets\Scene1\Car_Controller.cs" />
      <Compile Include="Assets\Scene1\Car_Data.cs" />
      <Compile Include="Assets\Scene1\Car_Menu.cs" />
@@ -166,6 +167,7 @@
      <Compile Include="Assets\Scene1\Standard Assets\Vehicles\Car\Scripts\SkidTrail.cs" />
      <Compile Include="Assets\Scene1\Standard Assets\Vehicles\Car\Scripts\Suspension.cs" />
      <Compile Include="Assets\Scene1\Standard Assets\Vehicles\Car\Scripts\WheelEffects.cs" />
+     <Compile Include="Assets\Scene1\Text_Renderer.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\CircleObject.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\GameObjectExtensions.cs" />
      <Compile Include="Assets\Tiled2Unity\Scripts\Runtime\GPUInstancing.cs" />
