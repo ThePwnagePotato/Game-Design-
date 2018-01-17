@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class Car : MonoBehaviour {
 
@@ -165,7 +166,7 @@ public class Car : MonoBehaviour {
 		// Extend the calculations past actual car dimensions for better simulation
 		AxleFront.DistanceToCG *= AxleDistanceCorrection;
 		AxleRear.DistanceToCG *= AxleDistanceCorrection;
-			
+
 		WheelBase = AxleFront.DistanceToCG + AxleRear.DistanceToCG;
 		Inertia = Rigidbody2D.mass * InertiaScale;
 
@@ -198,7 +199,7 @@ public class Car : MonoBehaviour {
 	}
 
 	void Start() {
-		
+
 		AxleFront.Init (Rigidbody2D, WheelBase);
 		AxleRear.Init (Rigidbody2D, WheelBase);
 
@@ -232,11 +233,11 @@ public class Car : MonoBehaviour {
 				steerInput = -1;
 			}
 
-//			if (Input.GetKeyDown (KeyCode.A)) {
-//				Engine.ShiftUp();
-//			} else if (Input.GetKeyDown (KeyCode.Z)) {
-//				Engine.ShiftDown();
-//			}
+			//			if (Input.GetKeyDown (KeyCode.A)) {
+			//				Engine.ShiftUp();
+			//			} else if (Input.GetKeyDown (KeyCode.Z)) {
+			//				Engine.ShiftDown();
+			//			}
 
 			// Apply filters to our steer direction
 			SteerDirection = SmoothSteering (steerInput);
@@ -248,8 +249,7 @@ public class Car : MonoBehaviour {
 			// Set front axle tires rotation
 			AxleFront.TireRight.transform.localRotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * SteerAngle);
 			AxleFront.TireLeft.transform.localRotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * SteerAngle);
-		}			
-
+		}
 
 		// Calculate weight center of four tires
 		// This is just to draw that red dot over the car to indicate what tires have the most weight
@@ -263,9 +263,9 @@ public class Car : MonoBehaviour {
 
 			pos = (AxleFront.TireLeft.transform.localPosition) * wfl +
 				(AxleFront.TireRight.transform.localPosition) * wfr +
-			    (AxleRear.TireLeft.transform.localPosition) * wrl +
+				(AxleRear.TireLeft.transform.localPosition) * wrl +
 				(AxleRear.TireRight.transform.localPosition) * wrr;
-		
+
 			float weightTotal = wfl + wfr + wrl + wrr;
 
 			if (weightTotal > 0) {
@@ -292,11 +292,11 @@ public class Car : MonoBehaviour {
 		// Automatic transmission
 		Engine.UpdateAutomaticTransmission (Rigidbody2D);
 
-        // Update camera
-        if (IsPlayerControlled)
-        {
-            CameraView.transform.position = this.transform.position;
-        }
+		// Update camera
+		if (IsPlayerControlled)
+		{
+			CameraView.transform.position = this.transform.position;
+		}
 
 		timeMSec += (int) (Time.deltaTime * 1000);
 		if (timeMSec >= 1000) {
@@ -307,8 +307,23 @@ public class Car : MonoBehaviour {
 			timeSec -= 60;
 			timeMin++;
 		}
+
+
+		if (IsPlayerControlled && Durability <= 0) {
+			Explode ();
+		}
 	}
-			
+
+	void Explode() {
+		IsPlayerControlled = false;
+
+		GameObject explosion = Instantiate(Resources.Load("Explosion", typeof(GameObject)), new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
+		explosion.transform.Translate (Vector3.back * 2, explosion.transform.parent);
+
+		Rigidbody2D.velocity *= 0;
+		transform.Translate (Vector3.right * 2000, transform);
+	}
+
 	void FixedUpdate() {
 
 		// Update from rigidbody to retain collision responses
@@ -335,7 +350,7 @@ public class Car : MonoBehaviour {
 		AxleFront.TireRight.ActiveWeight = weightFront + transferY;
 		AxleRear.TireLeft.ActiveWeight = weightRear - transferY;
 		AxleRear.TireRight.ActiveWeight = weightRear + transferY;
-			
+
 		// Velocity of each tire
 		AxleFront.TireLeft.AngularVelocity = AxleFront.DistanceToCG * AngularVelocity;
 		AxleFront.TireRight.AngularVelocity = AxleFront.DistanceToCG * AngularVelocity;
@@ -368,7 +383,7 @@ public class Car : MonoBehaviour {
 		AxleRear.TireLeft.FrictionForce = Mathf.Clamp(-CornerStiffnessRear * AxleRear.SlipAngle, -AxleRear.TireLeft.Grip, AxleRear.TireLeft.Grip) * AxleRear.TireLeft.ActiveWeight;
 		AxleRear.TireRight.FrictionForce = Mathf.Clamp(-CornerStiffnessRear * AxleRear.SlipAngle, -AxleRear.TireRight.Grip, AxleRear.TireRight.Grip) * AxleRear.TireRight.ActiveWeight;
 
-	 	// Forces
+		// Forces
 		float tractionForceX = AxleRear.Torque - activeBrake * Mathf.Sign(LocalVelocity.x);
 		float tractionForceY = 0;
 
@@ -387,7 +402,7 @@ public class Car : MonoBehaviour {
 		if (Throttle == 0) {
 			Velocity = Vector2.Lerp (Velocity, Vector2.zero, 0.005f);
 		}
-	
+
 		// Acceleration
 		LocalAcceleration.x = totalForceX / Rigidbody2D.mass;
 		LocalAcceleration.y = totalForceY / Rigidbody2D.mass;
@@ -454,6 +469,8 @@ public class Car : MonoBehaviour {
 					offRoad = false;
 				} else if (tag.Equals ("Offroad")) {
 					offRoad = true;
+				} else if (tag.Equals ("Finish")) {
+					SceneManager.LoadScene ("race");
 				} else {
 					offRoad = true;
 				}
@@ -461,7 +478,6 @@ public class Car : MonoBehaviour {
 		} else {
 			offRoad = true;
 		}
-
 	}
 
 	float SmoothSteering(float steerInput) {
@@ -495,51 +511,51 @@ public class Car : MonoBehaviour {
 		float damage = Mathf.Pow (coll.relativeVelocity.magnitude, 2) * Rigidbody2D.mass / 2000;
 		Durability -= damage;
 
-//		Debug.Log ("COLLISION: " + coll.relativeVelocity.magnitude);
-//		Debug.Log ("DAMAGE: " + damage);
+		//		Debug.Log ("COLLISION: " + coll.relativeVelocity.magnitude);
+		//		Debug.Log ("DAMAGE: " + damage);
 	}
 
 	void OnGUI (){
 		if (IsPlayerControlled && DebugGUI)
-        {
-            GUI.Label(new Rect(5, 5, 300, 20), "Speed: " + SpeedKilometersPerHour.ToString());
-            GUI.Label(new Rect(5, 25, 300, 20), "RPM: " + Engine.GetRPM(Rigidbody2D).ToString());
-            GUI.Label(new Rect(5, 45, 300, 20), "Gear: " + (Engine.CurrentGear + 1).ToString());
-            GUI.Label(new Rect(5, 65, 300, 20), "LocalAcceleration: " + LocalAcceleration.ToString());
-            GUI.Label(new Rect(5, 85, 300, 20), "Acceleration: " + Acceleration.ToString());
-            GUI.Label(new Rect(5, 105, 300, 20), "LocalVelocity: " + LocalVelocity.ToString());
-            GUI.Label(new Rect(5, 125, 300, 20), "Velocity: " + Velocity.ToString());
-            GUI.Label(new Rect(5, 145, 300, 20), "SteerAngle: " + SteerAngle.ToString());
-            GUI.Label(new Rect(5, 165, 300, 20), "Throttle: " + Throttle.ToString());
-            GUI.Label(new Rect(5, 185, 300, 20), "Brake: " + Brake.ToString());
+		{
+			GUI.Label(new Rect(5, 5, 300, 20), "Speed: " + SpeedKilometersPerHour.ToString());
+			GUI.Label(new Rect(5, 25, 300, 20), "RPM: " + Engine.GetRPM(Rigidbody2D).ToString());
+			GUI.Label(new Rect(5, 45, 300, 20), "Gear: " + (Engine.CurrentGear + 1).ToString());
+			GUI.Label(new Rect(5, 65, 300, 20), "LocalAcceleration: " + LocalAcceleration.ToString());
+			GUI.Label(new Rect(5, 85, 300, 20), "Acceleration: " + Acceleration.ToString());
+			GUI.Label(new Rect(5, 105, 300, 20), "LocalVelocity: " + LocalVelocity.ToString());
+			GUI.Label(new Rect(5, 125, 300, 20), "Velocity: " + Velocity.ToString());
+			GUI.Label(new Rect(5, 145, 300, 20), "SteerAngle: " + SteerAngle.ToString());
+			GUI.Label(new Rect(5, 165, 300, 20), "Throttle: " + Throttle.ToString());
+			GUI.Label(new Rect(5, 185, 300, 20), "Brake: " + Brake.ToString());
 
-            GUI.Label(new Rect(5, 205, 300, 20), "HeadingAngle: " + HeadingAngle.ToString());
-            GUI.Label(new Rect(5, 225, 300, 20), "AngularVelocity: " + AngularVelocity.ToString());
+			GUI.Label(new Rect(5, 205, 300, 20), "HeadingAngle: " + HeadingAngle.ToString());
+			GUI.Label(new Rect(5, 225, 300, 20), "AngularVelocity: " + AngularVelocity.ToString());
 
-            GUI.Label(new Rect(5, 245, 300, 20), "TireFL Weight: " + AxleFront.TireLeft.ActiveWeight.ToString());
-            GUI.Label(new Rect(5, 265, 300, 20), "TireFR Weight: " + AxleFront.TireRight.ActiveWeight.ToString());
-            GUI.Label(new Rect(5, 285, 300, 20), "TireRL Weight: " + AxleRear.TireLeft.ActiveWeight.ToString());
-            GUI.Label(new Rect(5, 305, 300, 20), "TireRR Weight: " + AxleRear.TireRight.ActiveWeight.ToString());
+			GUI.Label(new Rect(5, 245, 300, 20), "TireFL Weight: " + AxleFront.TireLeft.ActiveWeight.ToString());
+			GUI.Label(new Rect(5, 265, 300, 20), "TireFR Weight: " + AxleFront.TireRight.ActiveWeight.ToString());
+			GUI.Label(new Rect(5, 285, 300, 20), "TireRL Weight: " + AxleRear.TireLeft.ActiveWeight.ToString());
+			GUI.Label(new Rect(5, 305, 300, 20), "TireRR Weight: " + AxleRear.TireRight.ActiveWeight.ToString());
 
-            GUI.Label(new Rect(5, 325, 300, 20), "TireFL Friction: " + AxleFront.TireLeft.FrictionForce.ToString());
-            GUI.Label(new Rect(5, 345, 300, 20), "TireFR Friction: " + AxleFront.TireRight.FrictionForce.ToString());
-            GUI.Label(new Rect(5, 365, 300, 20), "TireRL Friction: " + AxleRear.TireLeft.FrictionForce.ToString());
-            GUI.Label(new Rect(5, 385, 300, 20), "TireRR Friction: " + AxleRear.TireRight.FrictionForce.ToString());
+			GUI.Label(new Rect(5, 325, 300, 20), "TireFL Friction: " + AxleFront.TireLeft.FrictionForce.ToString());
+			GUI.Label(new Rect(5, 345, 300, 20), "TireFR Friction: " + AxleFront.TireRight.FrictionForce.ToString());
+			GUI.Label(new Rect(5, 365, 300, 20), "TireRL Friction: " + AxleRear.TireLeft.FrictionForce.ToString());
+			GUI.Label(new Rect(5, 385, 300, 20), "TireRR Friction: " + AxleRear.TireRight.FrictionForce.ToString());
 
-            GUI.Label(new Rect(5, 405, 300, 20), "TireFL Grip: " + AxleFront.TireLeft.Grip.ToString());
-            GUI.Label(new Rect(5, 425, 300, 20), "TireFR Grip: " + AxleFront.TireRight.Grip.ToString());
-            GUI.Label(new Rect(5, 445, 300, 20), "TireRL Grip: " + AxleRear.TireLeft.Grip.ToString());
-            GUI.Label(new Rect(5, 465, 300, 20), "TireRR Grip: " + AxleRear.TireRight.Grip.ToString());
+			GUI.Label(new Rect(5, 405, 300, 20), "TireFL Grip: " + AxleFront.TireLeft.Grip.ToString());
+			GUI.Label(new Rect(5, 425, 300, 20), "TireFR Grip: " + AxleFront.TireRight.Grip.ToString());
+			GUI.Label(new Rect(5, 445, 300, 20), "TireRL Grip: " + AxleRear.TireLeft.Grip.ToString());
+			GUI.Label(new Rect(5, 465, 300, 20), "TireRR Grip: " + AxleRear.TireRight.Grip.ToString());
 
-            GUI.Label(new Rect(5, 485, 300, 20), "AxleF SlipAngle: " + AxleFront.SlipAngle.ToString());
-            GUI.Label(new Rect(5, 505, 300, 20), "AxleR SlipAngle: " + AxleRear.SlipAngle.ToString());
+			GUI.Label(new Rect(5, 485, 300, 20), "AxleF SlipAngle: " + AxleFront.SlipAngle.ToString());
+			GUI.Label(new Rect(5, 505, 300, 20), "AxleR SlipAngle: " + AxleRear.SlipAngle.ToString());
 
-            GUI.Label(new Rect(5, 525, 300, 20), "AxleF Torque: " + AxleFront.Torque.ToString());
-            GUI.Label(new Rect(5, 545, 300, 20), "AxleR Torque: " + AxleRear.Torque.ToString());
-        }
+			GUI.Label(new Rect(5, 525, 300, 20), "AxleF Torque: " + AxleFront.Torque.ToString());
+			GUI.Label(new Rect(5, 545, 300, 20), "AxleR Torque: " + AxleRear.Torque.ToString());
+		}
 
-//		GUI.backgroundColor = new Color (0f, 1f, 1f, 0.5f);
-//		GUI.contentColor = new Color (1f, 1f, 1f, 0.8f);
+		//		GUI.backgroundColor = new Color (0f, 1f, 1f, 0.5f);
+		//		GUI.contentColor = new Color (1f, 1f, 1f, 0.8f);
 		GUI.DrawTexture (new Rect(-1, -1, Screen.width + 2, 28), Texture2D.whiteTexture, ScaleMode.StretchToFill, true, 10.0f);
 
 		// Speed
