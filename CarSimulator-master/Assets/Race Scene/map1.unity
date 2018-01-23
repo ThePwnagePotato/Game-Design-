@@ -725,18 +725,18 @@ MonoBehaviour:
   Steering: 0
   Grip: 0
   Drag: 0
-  Mass: 0
+  MassOld: 0
   Durability: 0
   Acceleration: 0
   Top_Speed: 0
   MaxSteerAngle: 0.75
-  AirResistance: 2.5
-  RollingResistance: 8
-  TotalTireGripFront: 2.5
-  TotalTireGripRear: 2.5
-  SteerSpeed: 2.5
   SpeedTurningStability: 10
+  SteerSpeed: 2.5
+  TotalTireGrip: 0
+  RollingResistance: 8
   DurabilityMax: 2000
+  AirResistance: 2.5
+  Mass: 1200
   accelMultiplier: 1.4
   speedLimit: 16
 --- !u!4 &2145803007

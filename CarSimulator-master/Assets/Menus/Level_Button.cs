@@ -19,7 +19,7 @@ public class Level_Button : MonoBehaviour {
 				if (hit.collider != null) {
 					//Debug.Log (hit.collider.name);
 					if (hit.collider.name.Equals("Beginners")) {
-						SceneManager.LoadScene("Scene1");
+						SceneManager.LoadScene("map1");
 					} else if (hit.collider.name.Equals("Quit")) {
 						Application.Quit ();
 					}

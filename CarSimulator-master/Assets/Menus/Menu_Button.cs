@@ -19,7 +19,7 @@ public class Menu_Button : MonoBehaviour {
 				if (hit.collider != null) {
 					//Debug.Log (hit.collider.name);
 					if (hit.collider.name.Equals("Start")) {
-						SceneManager.LoadScene("LevelSelect");
+						SceneManager.LoadScene("Scene1");
 					} else if (hit.collider.name.Equals("Quit")) {
 						Application.Quit ();
 					}

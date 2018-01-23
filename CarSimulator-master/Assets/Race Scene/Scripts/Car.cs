@@ -196,6 +196,12 @@ public class Car : MonoBehaviour {
 			}
 		}
 
+		if (Durability > 400 && Durability < 700) {
+			transform.Find ("Engine").gameObject.GetComponent<SpriteRenderer> ().color = Color.green;
+		} else if (Durability >= 700) {
+			transform.Find ("Engine").gameObject.GetComponent<SpriteRenderer> ().color = Color.red;
+		}
+
 		DurabilityMax = Durability;
 		timeMSec = 0;
 		timeSec = 0;
@@ -222,7 +228,7 @@ public class Car : MonoBehaviour {
 		if (waitForResponse) {
 			if(Input.GetKey(KeyCode.Space))	{
 				if (finished) {
-					SceneManager.LoadScene ("LevelSelect");
+					SceneManager.LoadScene ("Start");
 				} else {
 					SceneManager.LoadScene ("Scene1");
 				}
@@ -542,7 +548,7 @@ public class Car : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D coll) {
 		// collision damage based on velocity squared and car weight
-		float damage = Mathf.Pow (coll.relativeVelocity.magnitude, 2) * Rigidbody2D.mass / 2000;
+		float damage = Mathf.Pow (coll.relativeVelocity.magnitude, 2f);
 		Durability -= damage;
 
 		//		Debug.Log ("COLLISION: " + coll.relativeVelocity.magnitude);

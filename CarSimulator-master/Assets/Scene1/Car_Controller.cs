@@ -41,7 +41,7 @@ public class Car_Controller : MonoBehaviour {
 				newName = Item.name;
 
 				if (Item.NextLevel == true) {
-					SceneManager.LoadScene ("map1");
+					SceneManager.LoadScene ("LevelSelect");
 				}
 				else if (Item.menu == false) {
 					switch (Item.type) {
